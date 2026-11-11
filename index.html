@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalyani Electricals - Billing & Estimate</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media print {
+      body { background-color: #ffffff !important; padding: 0 !important; margin: 0 !important; }
+      .no-print, #loginOverlay { display: none !important; }
+      .print-border-none { border: none !important; box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans p-2 sm:p-6 min-h-screen">
+
+  <!-- ================= LOGIN LOCK SCREEN ================= -->
+  <div id="loginOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 space-y-5 border border-slate-200">
+      <div class="text-center space-y-1">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-amber-100 text-amber-600 mb-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        </div>
+        <h2 class="text-xl font-bold text-slate-900">Protected Access</h2>
+        <p class="text-xs text-slate-500">Kalyani Electricals Billing Portal</p>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Username</label>
+          <input type="text" id="loginUser" placeholder="Enter username" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-amber-600">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Password</label>
+          <input type="password" id="loginPass" placeholder="Enter password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-amber-600">
+        </div>
+        <p id="loginError" class="text-xs text-red-500 font-medium hidden text-center">Invalid Username or Password!</p>
+        <button onclick="checkLogin()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2.5 rounded-lg text-sm shadow transition">
+          Unlock System
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MASTER APP CONTAINER ================= -->
+  <div id="mainBillingApp" class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden print-border-none hidden">
+    
+    <!-- Top Bar / Brand Header -->
+    <div class="bg-slate-900 text-white p-6">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="bg-amber-500 text-slate-950 text-xs font-bold px-2 py-0.5 rounded tracking-wide uppercase">Electrical</span>
+            <input type="text" id="bizTitle" value="KALYANI ELECTRICALS" class="bg-transparent text-xl sm:text-2xl font-bold tracking-wide outline-none border-b border-transparent hover:border-slate-600 focus:border-amber-500 text-white w-full max-w-md">
+          </div>
+          <input type="text" id="bizSubtitle" value="Industrial & Domestic Electrical Works, Slab Piping & Maintenance" class="bg-transparent text-xs text-slate-400 mt-1 outline-none border-b border-transparent hover:border-slate-600 focus:border-amber-500 w-full max-w-md">
+          <div class="flex flex-wrap gap-4 text-xs text-slate-400 mt-2">
+            <span>Contact: <input type="text" id="bizPhone" value="+91 9876543210" class="bg-transparent text-slate-300 outline-none w-32 border-b border-transparent hover:border-slate-600"></span>
+            <span>GSTIN: <input type="text" id="bizGst" value="27AAAAA0000A1Z5" class="bg-transparent text-slate-300 outline-none w-36 border-b border-transparent hover:border-slate-600"></span>
+          </div>
+        </div>
+
+        <!-- Document Metas & Search -->
+        <div class="space-y-2 w-full md:w-auto">
+          <div class="flex justify-end gap-2 mb-1">
+            <button onclick="logout()" class="text-[11px] bg-slate-800 hover:bg-rose-900 text-rose-300 px-2 py-0.5 rounded border border-slate-700">Logout</button>
+          </div>
+          <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 space-y-2 text-xs">
+            <div class="flex items-center justify-between gap-3">
+              <label class="text-slate-400">Doc Type:</label>
+              <select id="docType" class="bg-slate-900 border border-slate-600 text-white px-2 py-1 rounded text-xs outline-none">
+                <option value="ESTIMATE / QUOTATION">Estimate / Quotation</option>
+                <option value="ELECTRICAL WORK BILL">Electrical Work Bill</option>
+                <option value="LABOUR ESTIMATE">Labour Estimate</option>
+              </select>
+            </div>
+            <div class="flex items-center justify-between gap-3">
+              <label class="text-slate-400">Bill/Est No:</label>
+              <input type="text" id="billNo" class="bg-slate-900 border border-slate-600 text-white px-2 py-1 rounded text-xs w-32 outline-none font-mono">
+            </div>
+            <div class="flex items-center justify-between gap-3">
+              <label class="text-slate-400">Issue Date:</label>
+              <input type="date" id="billDate" class="bg-slate-900 border border-slate-600 text-white px-2 py-1 rounded text-xs outline-none">
+            </div>
+          </div>
+          <button type="button" onclick="openHistoryModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-1.5 rounded transition flex items-center justify-center gap-1.5 shadow">
+            📁 Search Old Bills
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bill Content Area -->
+    <div class="p-4 sm:p-6 space-y-6">
+
+      <!-- Client Info Section -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Customer / Site Details</label>
+          <input type="text" id="custName" placeholder="Client / Owner Name *" class="w-full border border-slate-300 rounded px-3 py-1.5 text-sm bg-white mb-2 outline-none focus:border-amber-600">
+          <textarea id="custAddress" rows="2" placeholder="Site / Flat / Building Address" class="w-full border border-slate-300 rounded px-3 py-1.5 text-xs bg-white outline-none focus:border-amber-600"></textarea>
+        </div>
+        <div class="flex flex-col justify-between">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Contact Details</label>
+            <input type="text" id="custPhone" placeholder="Mobile Number" class="w-full border border-slate-300 rounded px-3 py-1.5 text-sm bg-white mb-2 outline-none focus:border-amber-600">
+            <input type="text" id="custGst" placeholder="Client GSTIN (Optional)" class="w-full border border-slate-300 rounded px-3 py-1.5 text-xs bg-white outline-none focus:border-amber-600">
+          </div>
+        </div>
+      </div>
+
+      <!-- Items Table -->
+      <div class="overflow-x-auto border border-slate-200 rounded-lg">
+        <table class="w-full text-left text-sm border-collapse">
+          <thead class="bg-slate-100 text-slate-700 uppercase text-xs border-b border-slate-200">
+            <tr>
+              <th class="p-3 w-12 text-center border-r border-slate-200">#</th>
+              <th class="p-3 border-r border-slate-200">Material / Electrical Work Description</th>
+              <th class="p-3 w-24 text-center border-r border-slate-200">Qty / Pts</th>
+              <th class="p-3 w-32 text-right border-r border-slate-200">Rate (₹)</th>
+              <th class="p-3 w-32 text-right border-r border-slate-200">Total (₹)</th>
+              <th class="p-3 w-14 text-center no-print">Action</th>
+            </tr>
+          </thead>
+          <tbody id="itemsContainer" class="divide-y divide-slate-200">
+            <tr class="item-row">
+              <td class="p-2 text-center text-slate-400 border-r border-slate-200 row-num">1</td>
+              <td class="p-2 border-r border-slate-200">
+                <input type="text" class="w-full px-2 py-1 outline-none text-sm item-desc focus:bg-amber-50/50 rounded" placeholder="E.g. Point Wiring / MCB Distribution Box / Copper Wire">
+              </td>
+              <td class="p-2 border-r border-slate-200">
+                <input type="number" min="1" value="1" class="w-full text-center px-2 py-1 border border-slate-300 rounded outline-none text-sm item-qty" oninput="calculateGrandTotal()">
+              </td>
+              <td class="p-2 border-r border-slate-200">
+                <input type="number" min="0" step="any" value="0" class="w-full text-right px-2 py-1 border border-slate-300 rounded outline-none text-sm item-rate" oninput="calculateGrandTotal()">
+              </td>
+              <td class="p-2 text-right font-medium text-slate-800 border-r border-slate-200 item-amount">0.00</td>
+              <td class="p-2 text-center no-print">
+                <button type="button" onclick="deleteItemRow(this)" class="text-red-500 hover:text-red-700 font-bold px-2 py-1">✕</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Add Row Buttons -->
+      <div class="flex justify-between items-center no-print">
+        <button type="button" onclick="addItemRow()" class="bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 text-xs font-semibold px-4 py-2 rounded shadow-sm transition">
+          + Add New Work / Item
+        </button>
+      </div>
+
+      <!-- Financial Calculation & Notes -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-slate-200 pt-6">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Terms & Conditions</label>
+            <textarea id="termsConditions" rows="3" class="w-full border border-slate-300 rounded p-2 text-xs text-slate-700 bg-white outline-none" placeholder="1. 40% advance with work order, balance on stage completion.&#10;2. Concealed wiring checking to be done prior to plastering.&#10;3. Estimate valid for 15 days."></textarea>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-3 text-sm">
+          <div class="flex justify-between text-slate-600">
+            <span>Sub Total:</span>
+            <span class="font-semibold text-slate-800" id="valSubTotal">₹0.00</span>
+          </div>
+
+          <div class="border-t border-slate-200 pt-2 space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="inline-flex items-center text-xs font-semibold text-slate-700 cursor-pointer">
+                <input type="checkbox" id="gstCheck" onchange="calculateGrandTotal()" class="mr-2 rounded text-amber-600">
+                Apply GST (18%)
+              </label>
+            </div>
+            <div id="gstSplitRows" class="hidden space-y-1 text-xs text-slate-500 pl-4 border-l-2 border-amber-300">
+              <div class="flex justify-between">
+                <span>Central GST (9%):</span>
+                <span id="valCgst">₹0.00</span>
+              </div>
+              <div class="flex justify-between">
+                <span>State GST (9%):</span>
+                <span id="valSgst">₹0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t-2 border-slate-300 pt-3 flex justify-between items-center text-base font-bold text-slate-900">
+            <span>Final Amount:</span>
+            <span class="text-amber-700 text-xl font-extrabold" id="valGrandTotal">₹0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="border-t border-slate-200 pt-6 flex flex-wrap justify-between items-center gap-3 no-print">
+        <button type="button" onclick="resetForm()" class="text-xs font-medium text-slate-500 hover:text-slate-800 px-3 py-2 border border-slate-200 rounded">
+          Reset Form
+        </button>
+        <div class="flex gap-2">
+          <!-- Save to Google Sheet Button -->
+          <button type="button" id="saveSheetBtn" onclick="saveToGoogleSheet()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow transition text-sm flex items-center gap-1.5">
+            💾 Save to Sheet
+          </button>
+          <!-- Print Button -->
+          <button type="button" onclick="triggerCleanPrint()" class="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow transition text-sm flex items-center gap-2">
+            🖨️ Print / Save PDF
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= SEARCH OLD BILLS MODAL ================= -->
+  <div id="historyModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-6 space-y-4 max-h-[85vh] flex flex-col">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-lg font-bold text-slate-800">Saved Estimates & Invoices</h3>
+        <button onclick="closeHistoryModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+      </div>
+
+      <input type="text" id="searchFilter" oninput="filterHistory()" placeholder="Search by Bill No or Client Name..." class="w-full border border-slate-300 rounded px-3 py-2 text-sm outline-none focus:border-amber-600">
+
+      <div class="overflow-y-auto flex-1 divide-y divide-slate-100" id="historyList">
+        <div class="text-center py-6 text-sm text-slate-400">Loading bills from Google Sheets...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= STANDALONE PRINT INVOICE ================= -->
+  <div id="printDocument" class="hidden bg-white max-w-4xl mx-auto p-8 border border-slate-300 font-sans">
+    <div class="flex justify-between items-start border-b-2 border-amber-600 pb-4 mb-4">
+      <div>
+        <h1 class="text-2xl font-black text-amber-800 tracking-tight" id="pBizTitle"></h1>
+        <p class="text-xs text-slate-600" id="pBizSubtitle"></p>
+        <div class="text-xs text-slate-500 mt-1">
+          <span id="pBizPhone"></span> | GSTIN: <span id="pBizGst"></span>
+        </div>
+      </div>
+      <div class="text-right">
+        <h2 class="text-xl font-bold text-slate-800 uppercase" id="pDocType"></h2>
+        <div class="text-xs text-slate-600 mt-1">
+          <div><strong>Doc No:</strong> <span id="pBillNo"></span></div>
+          <div><strong>Date:</strong> <span id="pBillDate"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-slate-50 p-3 rounded border border-slate-200 mb-6 flex justify-between text-xs">
+      <div>
+        <span class="text-slate-400 uppercase font-semibold block mb-0.5">Billed To / Site:</span>
+        <strong class="text-sm text-slate-800 block" id="pCustName"></strong>
+        <p class="text-slate-600 whitespace-pre-line mt-0.5" id="pCustAddress"></p>
+      </div>
+      <div class="text-right">
+        <div><strong>Mobile:</strong> <span id="pCustPhone"></span></div>
+      </div>
+    </div>
+
+    <table class="w-full text-left border-collapse border border-slate-300 text-xs mb-6">
+      <thead>
+        <tr class="bg-slate-100 text-slate-700 uppercase font-bold">
+          <th class="p-2 border border-slate-300 w-10 text-center">#</th>
+          <th class="p-2 border border-slate-300">Description of Work / Items</th>
+          <th class="p-2 border border-slate-300 w-16 text-center">Qty</th>
+          <th class="p-2 border border-slate-300 w-24 text-right">Rate (₹)</th>
+          <th class="p-2 border border-slate-300 w-28 text-right">Total (₹)</th>
+        </tr>
+      </thead>
+      <tbody id="pItemsBody"></tbody>
+    </table>
+
+    <div class="flex justify-between items-start gap-8 text-xs border-t border-slate-200 pt-4">
+      <div class="w-1/2">
+        <h4 class="font-bold uppercase text-slate-700 mb-0.5">Terms & Conditions:</h4>
+        <p id="pTerms" class="text-slate-600 whitespace-pre-line leading-relaxed"></p>
+      </div>
+      <div class="w-64 space-y-1.5 text-xs">
+        <div class="flex justify-between text-slate-600">
+          <span>Sub Total:</span>
+          <span class="font-medium text-slate-800" id="pSubTotal"></span>
+        </div>
+        <div id="pGstBlock" class="space-y-1 text-slate-500 border-t border-slate-200 pt-1">
+          <div class="flex justify-between">
+            <span>CGST (9%):</span>
+            <span id="pCgst"></span>
+          </div>
+          <div class="flex justify-between">
+            <span>SGST (9%):</span>
+            <span id="pSgst"></span>
+          </div>
+        </div>
+        <div class="border-t-2 border-amber-600 pt-2 flex justify-between font-bold text-sm text-amber-900">
+          <span>Grand Total:</span>
+          <span class="text-base" id="pGrandTotal"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // GOOGLE APPS SCRIPT WEB APP URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwBNjioKDriAVcey8jhZkXkXvtVNiIe1xoVPZ85-VhDJOZPMje5B5EBB_szv-JyM0ww/exec";
+
+    // AUTH CREDENTIALS
+    const AUTH_USER = "amar";
+    const AUTH_PASS = "160486311282@Sa";
+
+    function verifyAuth() {
+      if (sessionStorage.getItem('is_authenticated_kalyani') === 'true') {
+        document.getElementById('loginOverlay').classList.add('hidden');
+        document.getElementById('mainBillingApp').classList.remove('hidden');
+      }
+    }
+
+    function checkLogin() {
+      const u = document.getElementById('loginUser').value.trim();
+      const p = document.getElementById('loginPass').value.trim();
+      const err = document.getElementById('loginError');
+
+      if (u === AUTH_USER && p === AUTH_PASS) {
+        sessionStorage.setItem('is_authenticated_kalyani', 'true');
+        document.getElementById('loginOverlay').classList.add('hidden');
+        document.getElementById('mainBillingApp').classList.remove('hidden');
+        err.classList.add('hidden');
+      } else {
+        err.classList.remove('hidden');
+      }
+    }
+
+    function logout() {
+      sessionStorage.removeItem('is_authenticated_kalyani');
+      location.reload();
+    }
+
+    let fetchedBills = [];
+
+    document.getElementById('billDate').valueAsDate = new Date();
+    document.getElementById('billNo').value = 'KE-' + Math.floor(1000 + Math.random() * 9000);
+
+    function addItemRow(desc = '', qty = 1, rate = 0) {
+      const container = document.getElementById('itemsContainer');
+      const count = container.querySelectorAll('.item-row').length + 1;
+      const tr = document.createElement('tr');
+      tr.className = 'item-row';
+      tr.innerHTML = `
+        <td class="p-2 text-center text-slate-400 border-r border-slate-200 row-num">${count}</td>
+        <td class="p-2 border-r border-slate-200">
+          <input type="text" value="${desc}" class="w-full px-2 py-1 outline-none text-sm item-desc focus:bg-amber-50/50 rounded" placeholder="Item description">
+        </td>
+        <td class="p-2 border-r border-slate-200">
+          <input type="number" min="1" value="${qty}" class="w-full text-center px-2 py-1 border border-slate-300 rounded outline-none text-sm item-qty" oninput="calculateGrandTotal()">
+        </td>
+        <td class="p-2 border-r border-slate-200">
+          <input type="number" min="0" step="any" value="${rate}" class="w-full text-right px-2 py-1 border border-slate-300 rounded outline-none text-sm item-rate" oninput="calculateGrandTotal()">
+        </td>
+        <td class="p-2 text-right font-medium text-slate-800 border-r border-slate-200 item-amount">0.00</td>
+        <td class="p-2 text-center no-print">
+          <button type="button" onclick="deleteItemRow(this)" class="text-red-500 hover:text-red-700 font-bold px-2 py-1">✕</button>
+        </td>
+      `;
+      container.appendChild(tr);
+      calculateGrandTotal();
+    }
+
+    function deleteItemRow(btn) {
+      const container = document.getElementById('itemsContainer');
+      if (container.querySelectorAll('.item-row').length > 1) {
+        btn.closest('tr').remove();
+        document.querySelectorAll('#itemsContainer .item-row').forEach((row, idx) => {
+          row.querySelector('.row-num').textContent = idx + 1;
+        });
+        calculateGrandTotal();
+      }
+    }
+
+    function calculateGrandTotal() {
+      let subTotal = 0;
+      document.querySelectorAll('#itemsContainer .item-row').forEach(row => {
+        const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+        const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
+        const amount = qty * rate;
+        row.querySelector('.item-amount').textContent = amount.toFixed(2);
+        subTotal += amount;
+      });
+
+      document.getElementById('valSubTotal').textContent = '₹' + subTotal.toFixed(2);
+
+      let gstTotal = 0;
+      const isGst = document.getElementById('gstCheck').checked;
+      const splitRows = document.getElementById('gstSplitRows');
+
+      if (isGst) {
+        splitRows.classList.remove('hidden');
+        const halfGst = subTotal * 0.09;
+        gstTotal = halfGst * 2;
+        document.getElementById('valCgst').textContent = '₹' + halfGst.toFixed(2);
+        document.getElementById('valSgst').textContent = '₹' + halfGst.toFixed(2);
+      } else {
+        splitRows.classList.add('hidden');
+      }
+
+      document.getElementById('valGrandTotal').textContent = '₹' + (subTotal + gstTotal).toFixed(2);
+    }
+
+    async function saveToGoogleSheet() {
+      const saveBtn = document.getElementById('saveSheetBtn');
+      saveBtn.innerText = "Saving...";
+      saveBtn.disabled = true;
+
+      const items = [];
+      document.querySelectorAll('#itemsContainer .item-row').forEach(row => {
+        const desc = row.querySelector('.item-desc').value.trim();
+        const qty = row.querySelector('.item-qty').value;
+        const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
+        const total = row.querySelector('.item-amount').textContent;
+        if (desc !== "" || rate > 0) {
+          items.push({ desc: desc, qty: qty, rate: rate, total: total });
+        }
+      });
+
+      const payload = {
+        action: "save",
+        billNo: document.getElementById('billNo').value,
+        billDate: document.getElementById('billDate').value,
+        custName: document.getElementById('custName').value || 'Cash Customer',
+        custPhone: document.getElementById('custPhone').value || '-',
+        subTotal: document.getElementById('valSubTotal').textContent,
+        grandTotal: document.getElementById('valGrandTotal').textContent,
+        items: items
+      };
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        alert("✅ Data Google Sheet par successfully save ho gaya!");
+      } catch (err) {
+        console.error(err);
+        alert("❌ Save karne mein problem aayi.");
+      } finally {
+        saveBtn.innerText = "💾 Save to Sheet";
+        saveBtn.disabled = false;
+      }
+    }
+
+    async function openHistoryModal() {
+      const modal = document.getElementById('historyModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      try {
+        const res = await fetch(SCRIPT_URL);
+        fetchedBills = await res.json();
+        renderHistoryList(fetchedBills);
+      } catch (e) {
+        document.getElementById('historyList').innerHTML = '<div class="text-center py-6 text-red-500 text-sm">Failed to load bills.</div>';
+      }
+    }
+
+    function closeHistoryModal() {
+      const modal = document.getElementById('historyModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function renderHistoryList(bills) {
+      const list = document.getElementById('historyList');
+      if (!bills || bills.length === 0) {
+        list.innerHTML = '<div class="text-center py-6 text-sm text-slate-400">No records found.</div>';
+        return;
+      }
+      list.innerHTML = '';
+      bills.slice().reverse().forEach(b => {
+        const item = document.createElement('div');
+        item.className = 'py-3 flex justify-between items-center hover:bg-slate-50 px-2 cursor-pointer transition';
+        item.innerHTML = `
+          <div>
+            <strong class="text-sm text-amber-700">${b.billNo}</strong> - <span class="text-sm font-medium text-slate-800">${b.custName}</span>
+            <div class="text-xs text-slate-400">${b.billDate} | Mobile: ${b.custPhone}</div>
+          </div>
+          <div class="text-right">
+            <span class="text-sm font-bold text-slate-800">${b.grandTotal}</span>
+            <button onclick="loadBillData('${b.billNo}')" class="block text-xs text-amber-600 hover:underline mt-1 font-semibold">Load to Form</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function filterHistory() {
+      const q = document.getElementById('searchFilter').value.toLowerCase();
+      const filtered = fetchedBills.filter(b => 
+        (b.billNo && b.billNo.toLowerCase().includes(q)) || 
+        (b.custName && b.custName.toLowerCase().includes(q))
+      );
+      renderHistoryList(filtered);
+    }
+
+    function loadBillData(billNo) {
+      const bill = fetchedBills.find(b => b.billNo === billNo);
+      if (!bill) return;
+
+      document.getElementById('billNo').value = bill.billNo;
+      document.getElementById('billDate').value = bill.billDate;
+      document.getElementById('custName').value = bill.custName;
+      document.getElementById('custPhone').value = bill.custPhone;
+
+      const container = document.getElementById('itemsContainer');
+      container.innerHTML = '';
+      if (bill.items && bill.items.length > 0) {
+        bill.items.forEach(it => addItemRow(it.desc, it.qty, it.rate));
+      } else {
+        addItemRow();
+      }
+      calculateGrandTotal();
+      closeHistoryModal();
+    }
+
+    function triggerCleanPrint() {
+      const items = [];
+      document.querySelectorAll('#itemsContainer .item-row').forEach(row => {
+        const desc = row.querySelector('.item-desc').value.trim();
+        const qty = row.querySelector('.item-qty').value;
+        const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
+        const total = row.querySelector('.item-amount').textContent;
+        if (desc !== "" || rate > 0) {
+          items.push({ desc: desc || "Electrical Service", qty: qty, rate: rate.toFixed(2), total: total });
+        }
+      });
+
+      const payload = {
+        bizTitle: document.getElementById('bizTitle').value,
+        bizSubtitle: document.getElementById('bizSubtitle').value,
+        bizPhone: document.getElementById('bizPhone').value,
+        bizGst: document.getElementById('bizGst').value,
+        docType: document.getElementById('docType').value,
+        billNo: document.getElementById('billNo').value,
+        billDate: document.getElementById('billDate').value,
+        custName: document.getElementById('custName').value || 'Valued Customer',
+        custAddress: document.getElementById('custAddress').value || '',
+        custPhone: document.getElementById('custPhone').value || '-',
+        terms: document.getElementById('termsConditions').value,
+        subTotal: document.getElementById('valSubTotal').textContent,
+        isGst: document.getElementById('gstCheck').checked,
+        cgst: document.getElementById('valCgst').textContent,
+        sgst: document.getElementById('valSgst').textContent,
+        grandTotal: document.getElementById('valGrandTotal').textContent,
+        items: items
+      };
+
+      const encoded = encodeURIComponent(JSON.stringify(payload));
+      window.open(window.location.origin + window.location.pathname + '?render=' + encoded, '_blank');
+    }
+
+    function resetForm() {
+      if (confirm("Reset current form?")) {
+        document.getElementById('custName').value = '';
+        document.getElementById('custPhone').value = '';
+        document.getElementById('custAddress').value = '';
+        document.getElementById('itemsContainer').innerHTML = '';
+        addItemRow();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      verifyAuth();
+      const params = new URLSearchParams(window.location.search);
+      const renderPayload = params.get('render');
+
+      if (renderPayload) {
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('mainBillingApp').style.display = 'none';
+        const pDoc = document.getElementById('printDocument');
+        pDoc.classList.remove('hidden');
+
+        const data = JSON.parse(decodeURIComponent(renderPayload));
+        document.getElementById('pBizTitle').textContent = data.bizTitle;
+        document.getElementById('pBizSubtitle').textContent = data.bizSubtitle;
+        document.getElementById('pBizPhone').textContent = data.bizPhone;
+        document.getElementById('pBizGst').textContent = data.bizGst;
+        document.getElementById('pDocType').textContent = data.docType;
+        document.getElementById('pBillNo').textContent = data.billNo;
+        document.getElementById('pBillDate').textContent = data.billDate;
+        document.getElementById('pCustName').textContent = data.custName;
+        document.getElementById('pCustAddress').textContent = data.custAddress;
+        document.getElementById('pCustPhone').textContent = data.custPhone;
+        document.getElementById('pTerms').textContent = data.terms;
+        document.getElementById('pSubTotal').textContent = data.subTotal;
+        document.getElementById('pGrandTotal').textContent = data.grandTotal;
+
+        if (data.isGst) {
+          document.getElementById('pCgst').textContent = data.cgst;
+          document.getElementById('pSgst').textContent = data.sgst;
+        } else {
+          document.getElementById('pGstBlock').style.display = 'none';
+        }
+
+        const tbody = document.getElementById('pItemsBody');
+        tbody.innerHTML = '';
+        data.items.forEach((it, idx) => {
+          const row = document.createElement('tr');
+          row.className = 'border-b border-slate-300';
+          row.innerHTML = `
+            <td class="p-2 border border-slate-300 text-center text-slate-500">${idx + 1}</td>
+            <td class="p-2 border border-slate-300 font-medium text-slate-800">${it.desc}</td>
+            <td class="p-2 border border-slate-300 text-center">${it.qty}</td>
+            <td class="p-2 border border-slate-300 text-right">₹${it.rate}</td>
+            <td class="p-2 border border-slate-300 text-right font-bold text-slate-900">₹${it.total}</td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        setTimeout(() => { window.print(); }, 350);
+      }
+    });
+  </script>
+</body>
+</html>
