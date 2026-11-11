@@ -55,10 +55,10 @@
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <div class="flex items-center gap-2">
-            <span class="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded tracking-wide uppercase">System</span>
-            <input type="text" id="bizTitle" value="KALYANI ELECTRICALS & TECHNOLOGIES" class="bg-transparent text-xl font-bold tracking-wide outline-none border-b border-transparent hover:border-slate-600 focus:border-blue-500 text-white w-full max-w-md">
+            <span class="bg-amber-500 text-slate-950 text-xs font-bold px-2 py-0.5 rounded tracking-wide uppercase">Electrical</span>
+            <input type="text" id="bizTitle" value="KALYANI ELECTRICALS" class="bg-transparent text-xl font-bold tracking-wide outline-none border-b border-transparent hover:border-slate-600 focus:border-blue-500 text-white w-full max-w-md">
           </div>
-          <input type="text" id="bizSubtitle" value="Industrial & Domestic Electrical, CCTV, Networking & Security Solutions" class="bg-transparent text-xs text-slate-400 mt-1 outline-none border-b border-transparent hover:border-slate-600 focus:border-blue-500 w-full max-w-md">
+          <input type="text" id="bizSubtitle" value="Industrial & Domestic Electrical Works, Wiring & Maintenance Solutions" class="bg-transparent text-xs text-slate-400 mt-1 outline-none border-b border-transparent hover:border-slate-600 focus:border-blue-500 w-full max-w-md">
           <div class="flex flex-wrap gap-4 text-xs text-slate-400 mt-2">
             <span>Contact: <input type="text" id="bizPhone" value="+91 9876543210" class="bg-transparent text-slate-300 outline-none w-32 border-b border-transparent hover:border-slate-600"></span>
             <span>GSTIN: <input type="text" id="bizGst" value="27AAAAA0000A1Z5" class="bg-transparent text-slate-300 outline-none w-36 border-b border-transparent hover:border-slate-600"></span>
@@ -326,44 +326,43 @@
     const AUTH_USER = "amar";
     const AUTH_PASS = "160486311282@Sa";
 
-    // Dynamic Terms Library for All Services
     const TERMS_LIBRARY = {
       Electrical: `1. Scope of Work: The service provider agrees to perform electrical services as requested by the client, which may include installations, repairs, maintenance, inspections, or consultations.
-2. Estimates and Pricing: All pricing provided is an estimate based on information available. Final costs may vary depending on unforeseen site conditions. The LED profile measurements and the counting of power points will be carried out upon completion of the site, and the bill will be prepared accordingly.
+2. Estimates and Pricing: All pricing provided is an estimate based on information available. Final costs may vary depending on unforeseen conditions. The LED profile measurements and the counting of power points will be carried out upon completion of the site, and the bill will be prepared accordingly.
 3. Payment Terms: 50% advance payment is required before work begins. Remaining 50% payment is due upon completion of services.
-4. Cancellations and Rescheduling: Clients must provide at least 24 hours notice. If work is cancelled on the same day upon arrival at the site, visiting charges shall be payable.
-5. Warranties: Workmanship is guaranteed for a period of 6 months. Warranty excludes damages due to misuse, short-circuit outside scope, or interference by others.
-6. Client Responsibilities: The client must ensure clear access to the worksite and disclose pre-existing electrical hazards.
-7. Liability: The service provider is not liable for damages caused by pre-existing hidden wiring defects.
-8. Safety & Code: All work complies with standard electrical safety guidelines.
-9. Force Majeure: The service provider is not liable for delays caused by extreme weather or material shortages.`,
+4. Cancellations and Rescheduling: Clients must provide at least 24 hours notice. If work is cancelled on the same day upon arrival at the site, applicable visiting charges shall be payable.
+5. Warranties: Workmanship is guaranteed for a period of 6 months. Warranty excludes damages due to misuse or interference by others.
+6. Client Responsibilities: The client must ensure clear access to the worksite.
+7. Liability: The service provider is not liable for damages caused by pre-existing hidden wiring issues.
+8. Termination & Safety: Standard electrical codes followed.
+9. Force Majeure: Not liable for delays due to extreme conditions or material shortages.`,
 
-      CCTV: `1. Scope of Work: Supply, installation, cabling, testing, and commissioning of CCTV surveillance cameras, DVR/NVR, and power supplies.
-2. Camera Angles & Coverage: Final camera positions and viewing angles must be confirmed with the client before permanent mounting.
-3. Internet & Remote View: Internet router setup, static IP, or active mobile broadband for mobile viewing is the responsibility of the client.
-4. Warranty: Equipment warranty (1 to 2 years) is covered strictly as per manufacturer terms. Physical burn, water ingress, lightning, or power surges are not covered under warranty.
-5. Storage & Recording: Recording duration depends entirely on HDD capacity and motion activity; backup retention is not guaranteed beyond configured storage.
-6. Payment Terms: 60% advance along with work order, 40% balance upon display and mobile app commissioning.`,
+      CCTV: `1. Scope of Work: Supply, installation, cabling, testing, and commissioning of CCTV cameras, DVR/NVR, and power supplies.
+2. Viewing Angles: Camera positions and viewing angles must be confirmed with client before mounting.
+3. Internet & Remote View: Internet router setup or broadband for mobile view is client responsibility.
+4. Warranty: Equipment warranty as per manufacturer terms. Physical burn, water ingress, or voltage spikes not covered.
+5. Storage: Recording duration depends entirely on HDD capacity and motion activity.
+6. Payment Terms: 60% advance with work order, 40% balance upon display & mobile app setup.`,
 
-      Networking: `1. Scope of Work: Deployment of structured CAT6/Fiber cabling, I/O punching, rack termination, switch configurations, and Wi-Fi access points.
-2. Speed & ISP: Internet bandwidth and ISP line uptime are entirely the domain of the service provider company; internal LAN connectivity will be certified via fluke/cable testers.
-3. Concealed Conduits: Client must provide clear conduit pathways or permission for surface PVC casing/capping installation.
-4. Payment Terms: 50% advance for cable & active gear mobilization, remaining 50% on packet test sign-off.`,
+      Networking: `1. Scope of Work: Deployment of structured CAT6/Fiber cabling, I/O punching, rack termination, and Wi-Fi access points.
+2. Speed & ISP: Internet bandwidth and line uptime are domain of the service provider company.
+3. Pathways: Client must provide clear conduit pathways or permission for surface PVC casing.
+4. Payment Terms: 50% advance for cable mobilization, remaining 50% on connectivity sign-off.`,
 
-      Biometrics: `1. Scope of Work: Mounting, database enrollment, attendance/payroll software installation, and electromagnetic lock integration.
-2. Software Support: Free remote training provided for 30 days post-installation. Periodic desktop formatting or database corruption recovery beyond warranty is chargeable.
-3. Power Requirements: Client must provide stable uninterrupted 230V AC socket near the biometric device terminal.
-4. Payment Terms: 100% advance for hardware delivery, labour charges payable upon live verification.`,
+      Biometrics: `1. Scope of Work: Mounting, database enrollment, attendance software installation, and lock integration.
+2. Software Support: Free remote training for 30 days post-installation.
+3. Power: Client must provide uninterrupted power socket near device terminal.
+4. Payment Terms: 100% advance for hardware delivery, balance upon live verification.`,
 
-      "Fire Alarm": `1. Scope of Work: Installation of smoke detectors, heat sensors, manual call points, response indicators, and main control panel.
-2. Testing & Drills: Sounders and strobe alerts will be tested at high decibels upon site handover. Client approval required for operational hours.
-3. Battery Standby: Dual standby batteries must be kept on trickle charge continuously to maintain back-up reliability.
-4. Regulatory Code: Installed in strict compliance with IS 2189 / NBC fire protection guidelines.`,
+      "Fire Alarm": `1. Scope of Work: Installation of smoke detectors, heat sensors, manual call points, and panel.
+2. Testing: Sounders and strobe alerts will be tested at site handover.
+3. Batteries: Standby batteries must be kept on charge continuously.
+4. Regulatory: Installed in accordance with fire safety norms.`,
 
-      Solar: `1. Scope of Work: Supply and installation of solar PV modules, on-grid/hybrid inverters, module mounting structures, and AC/DC distribution boxes.
-2. Net Metering: Sanctions, net-metering approvals, and bi-directional meter release depend on local DISCOM / Electricity Board timelines.
-3. Shadow-Free Area: Client must ensure clear, shadow-free roof access. Shadow caused by subsequent construction is outside provider responsibility.
-4. Payment Terms: 70% advance with order placement, 20% on equipment delivery at site, 10% post-grid commissioning.`
+      Solar: `1. Scope of Work: Supply and installation of solar PV modules, inverter, structure, and distribution box.
+2. Net Metering: Sanctions and net-meter approvals depend on DISCOM timelines.
+3. Shadow-Free: Client must ensure clear, shadow-free roof access.
+4. Payment Terms: 70% advance, 20% on delivery, 10% post-grid commissioning.`
     };
 
     function verifyAuth() {
@@ -397,8 +396,6 @@
         case 'QUOTATION': return 'QUO-0' + num;
         case 'LABOUR_ESTIMATE': return 'LB-0' + num;
         case 'MATERIAL_LIST': return 'MAT-0' + num;
-        case 'TAX_INVOICE':
-        case 'INVOICE_NO_GST':
         default: return 'IN-0' + num;
       }
     }
@@ -506,7 +503,6 @@
       document.getElementById('valGrandTotal').textContent = '₹' + (subTotal + gstTotal).toFixed(2);
     }
 
-    // Google Sheets Cloud Sync
     async function saveToGoogleSheet() {
       const saveBtn = document.getElementById('saveSheetBtn');
       saveBtn.innerText = "Saving to Cloud...";
@@ -633,7 +629,7 @@
       closeHistoryModal();
     }
 
-    // Google Sites Sandbox Print Mechanism
+    // BULLETPROOF PRINT SYSTEM (Safe URL + Storage Backup)
     function triggerCleanPrint() {
       const items = [];
       document.querySelectorAll('#itemsContainer .item-row').forEach(row => {
@@ -663,7 +659,6 @@
         custName: document.getElementById('custName').value || 'Valued Client',
         custAddress: document.getElementById('custAddress').value || '',
         custPhone: document.getElementById('custPhone').value || '-',
-        terms: document.getElementById('termsConditions').value,
         subTotal: document.getElementById('valSubTotal').textContent,
         isGst: document.getElementById('gstCheck').checked,
         cgst: document.getElementById('valCgst').textContent,
@@ -672,8 +667,12 @@
         items: items
       };
 
-      const encoded = encodeURIComponent(JSON.stringify(payload));
-      window.open(window.location.origin + window.location.pathname + '?render=' + encoded, '_blank');
+      // Save complete payload to localStorage
+      localStorage.setItem('kalyani_print_cache', JSON.stringify(payload));
+
+      // Also send clean compact data via URL without long terms text
+      const cleanUrlData = encodeURIComponent(JSON.stringify(payload));
+      window.open(window.location.origin + window.location.pathname + '?render=' + cleanUrlData, '_blank');
     }
 
     function resetForm() {
@@ -702,74 +701,84 @@
         const pDoc = document.getElementById('printDocument');
         pDoc.classList.remove('hidden');
 
-        const data = JSON.parse(decodeURIComponent(renderPayload));
-        document.getElementById('pBizTitle').textContent = data.bizTitle;
-        document.getElementById('pBizSubtitle').textContent = data.bizSubtitle;
-        document.getElementById('pBizPhone').textContent = data.bizPhone;
-        document.getElementById('pBizGst').textContent = data.bizGst;
-        document.getElementById('pDocType').textContent = data.docType;
-        document.getElementById('pBillNo').textContent = data.billNo;
-        document.getElementById('pBillDate').textContent = data.billDate;
-        document.getElementById('pDocSubject').textContent = data.subject;
-        document.getElementById('pCustName').textContent = data.custName;
-        document.getElementById('pCustAddress').textContent = data.custAddress;
-        document.getElementById('pCustPhone').textContent = data.custPhone;
-        document.getElementById('pTerms').textContent = data.terms;
-
-        const pHead = document.getElementById('pTableHead');
-        const pSummary = document.getElementById('pSummarySection');
-
-        if (data.isMat) {
-          pHead.innerHTML = `
-            <th class="p-2 border border-slate-300 w-12 text-center">#</th>
-            <th class="p-2 border border-slate-300">Required Material Description</th>
-            <th class="p-2 border border-slate-300 w-24 text-center">Quantity</th>
-          `;
-          pSummary.style.display = 'none';
-        } else {
-          pHead.innerHTML = `
-            <th class="p-2 border border-slate-300 w-10 text-center">#</th>
-            <th class="p-2 border border-slate-300">Description of Work / Items</th>
-            <th class="p-2 border border-slate-300 w-16 text-center">Qty</th>
-            <th class="p-2 border border-slate-300 w-24 text-right">Rate (₹)</th>
-            <th class="p-2 border border-slate-300 w-28 text-right">Total (₹)</th>
-          `;
-          pSummary.style.display = 'block';
-          document.getElementById('pSubTotal').textContent = data.subTotal;
-          document.getElementById('pGrandTotal').textContent = data.grandTotal;
-
-          if (data.isGst) {
-            document.getElementById('pCgst').textContent = data.cgst;
-            document.getElementById('pSgst').textContent = data.sgst;
-          } else {
-            document.getElementById('pGstBlock').style.display = 'none';
-          }
+        let data = null;
+        try {
+          data = JSON.parse(decodeURIComponent(renderPayload));
+        } catch(e) {
+          data = JSON.parse(localStorage.getItem('kalyani_print_cache') || '{}');
         }
 
-        const tbody = document.getElementById('pItemsBody');
-        tbody.innerHTML = '';
-        data.items.forEach((it, idx) => {
-          const row = document.createElement('tr');
-          row.className = 'border-b border-slate-300';
-          if (data.isMat) {
-            row.innerHTML = `
-              <td class="p-2 border border-slate-300 text-center text-slate-500">${idx + 1}</td>
-              <td class="p-2 border border-slate-300 font-medium text-slate-800">${it.desc}</td>
-              <td class="p-2 border border-slate-300 text-center font-bold text-slate-900">${it.qty}</td>
-            `;
-          } else {
-            row.innerHTML = `
-              <td class="p-2 border border-slate-300 text-center text-slate-500">${idx + 1}</td>
-              <td class="p-2 border border-slate-300 font-medium text-slate-800">${it.desc}</td>
-              <td class="p-2 border border-slate-300 text-center">${it.qty}</td>
-              <td class="p-2 border border-slate-300 text-right">₹${it.rate}</td>
-              <td class="p-2 border border-slate-300 text-right font-bold text-slate-900">₹${it.total}</td>
-            `;
-          }
-          tbody.appendChild(row);
-        });
+        if (data && data.billNo) {
+          document.getElementById('pBizTitle').textContent = data.bizTitle || 'KALYANI ELECTRICALS';
+          document.getElementById('pBizSubtitle').textContent = data.bizSubtitle || '';
+          document.getElementById('pBizPhone').textContent = data.bizPhone || '';
+          document.getElementById('pBizGst').textContent = data.bizGst || '';
+          document.getElementById('pDocType').textContent = data.docType || 'ESTIMATE';
+          document.getElementById('pBillNo').textContent = data.billNo || '-';
+          document.getElementById('pBillDate').textContent = data.billDate || '-';
+          document.getElementById('pDocSubject').textContent = data.subject || 'Electrical';
+          document.getElementById('pCustName').textContent = data.custName || '-';
+          document.getElementById('pCustAddress').textContent = data.custAddress || '';
+          document.getElementById('pCustPhone').textContent = data.custPhone || '-';
 
-        setTimeout(() => { window.print(); }, 350);
+          // Load auto-terms directly by subject
+          document.getElementById('pTerms').textContent = TERMS_LIBRARY[data.subject] || TERMS_LIBRARY.Electrical;
+
+          const pHead = document.getElementById('pTableHead');
+          const pSummary = document.getElementById('pSummarySection');
+
+          if (data.isMat) {
+            pHead.innerHTML = `
+              <th class="p-2 border border-slate-300 w-12 text-center">#</th>
+              <th class="p-2 border border-slate-300">Required Material Description</th>
+              <th class="p-2 border border-slate-300 w-24 text-center">Quantity</th>
+            `;
+            pSummary.style.display = 'none';
+          } else {
+            pHead.innerHTML = `
+              <th class="p-2 border border-slate-300 w-10 text-center">#</th>
+              <th class="p-2 border border-slate-300">Description of Work / Items</th>
+              <th class="p-2 border border-slate-300 w-16 text-center">Qty</th>
+              <th class="p-2 border border-slate-300 w-24 text-right">Rate (₹)</th>
+              <th class="p-2 border border-slate-300 w-28 text-right">Total (₹)</th>
+            `;
+            pSummary.style.display = 'block';
+            document.getElementById('pSubTotal').textContent = data.subTotal || '₹0.00';
+            document.getElementById('pGrandTotal').textContent = data.grandTotal || '₹0.00';
+
+            if (data.isGst) {
+              document.getElementById('pCgst').textContent = data.cgst || '₹0.00';
+              document.getElementById('pSgst').textContent = data.sgst || '₹0.00';
+            } else {
+              document.getElementById('pGstBlock').style.display = 'none';
+            }
+          }
+
+          const tbody = document.getElementById('pItemsBody');
+          tbody.innerHTML = '';
+          (data.items || []).forEach((it, idx) => {
+            const row = document.createElement('tr');
+            row.className = 'border-b border-slate-300';
+            if (data.isMat) {
+              row.innerHTML = `
+                <td class="p-2 border border-slate-300 text-center text-slate-500">${idx + 1}</td>
+                <td class="p-2 border border-slate-300 font-medium text-slate-800">${it.desc}</td>
+                <td class="p-2 border border-slate-300 text-center font-bold text-slate-900">${it.qty}</td>
+              `;
+            } else {
+              row.innerHTML = `
+                <td class="p-2 border border-slate-300 text-center text-slate-500">${idx + 1}</td>
+                <td class="p-2 border border-slate-300 font-medium text-slate-800">${it.desc}</td>
+                <td class="p-2 border border-slate-300 text-center">${it.qty}</td>
+                <td class="p-2 border border-slate-300 text-right">₹${it.rate}</td>
+                <td class="p-2 border border-slate-300 text-right font-bold text-slate-900">₹${it.total}</td>
+              `;
+            }
+            tbody.appendChild(row);
+          });
+
+          setTimeout(() => { window.print(); }, 350);
+        }
       }
     });
   </script>
