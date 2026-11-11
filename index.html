@@ -3,17 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Billing & Quotation Portal</title>
+  <title>Kalyani Electricals - Billing Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html, body {
       overflow-y: visible !important;
       height: auto !important;
     }
+    /* Native Print Styling: Hide Editor & Show Clean Bill */
     @media print {
-      body { background-color: #ffffff !important; padding: 0 !important; margin: 0 !important; }
-      .no-print, #loginOverlay { display: none !important; }
-      .print-border-none { border: none !important; box-shadow: none !important; }
+      body {
+        background-color: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      #loginOverlay, #mainBillingApp, .no-print {
+        display: none !important;
+      }
+      #printDocument {
+        display: block !important;
+        border: none !important;
+        padding: 10px !important;
+        max-width: 100% !important;
+      }
     }
   </style>
 </head>
@@ -23,24 +35,24 @@
   <div id="loginOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 space-y-4 border border-slate-200">
       <div class="text-center space-y-1">
-        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-600 mb-2">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-amber-100 text-amber-600 mb-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
         </div>
         <h2 class="text-xl font-bold text-slate-900">Protected Access</h2>
-        <p class="text-xs text-slate-500">Business Management Portal</p>
+        <p class="text-xs text-slate-500">Kalyani Electricals Portal</p>
       </div>
 
       <div class="space-y-3">
         <div>
           <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Username</label>
-          <input type="text" id="loginUser" placeholder="Enter username" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-600">
+          <input type="text" id="loginUser" placeholder="Enter username" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-amber-600">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Password</label>
-          <input type="password" id="loginPass" placeholder="Enter password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-600">
+          <input type="password" id="loginPass" placeholder="Enter password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-amber-600">
         </div>
         <p id="loginError" class="text-xs text-red-500 font-medium hidden text-center">Invalid Credentials!</p>
-        <button onclick="checkLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm shadow transition">
+        <button onclick="checkLogin()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2.5 rounded-lg text-sm shadow transition">
           Unlock System
         </button>
       </div>
@@ -48,7 +60,7 @@
   </div>
 
   <!-- ================= MASTER APP CONTAINER ================= -->
-  <div id="mainBillingApp" class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden print-border-none hidden mb-10">
+  <div id="mainBillingApp" class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden mb-10 hidden">
     
     <!-- Top Bar / Brand Header -->
     <div class="bg-slate-900 text-white p-5 sm:p-6">
@@ -56,9 +68,9 @@
         <div>
           <div class="flex items-center gap-2">
             <span class="bg-amber-500 text-slate-950 text-xs font-bold px-2 py-0.5 rounded tracking-wide uppercase">Electrical</span>
-            <input type="text" id="bizTitle" value="KALYANI ELECTRICALS" class="bg-transparent text-xl font-bold tracking-wide outline-none border-b border-transparent hover:border-slate-600 focus:border-blue-500 text-white w-full max-w-md">
+            <input type="text" id="bizTitle" value="KALYANI ELECTRICALS" class="bg-transparent text-xl font-bold tracking-wide outline-none border-b border-transparent hover:border-slate-600 focus:border-amber-500 text-white w-full max-w-md">
           </div>
-          <input type="text" id="bizSubtitle" value="Industrial & Domestic Electrical Works, Wiring & Maintenance Solutions" class="bg-transparent text-xs text-slate-400 mt-1 outline-none border-b border-transparent hover:border-slate-600 focus:border-blue-500 w-full max-w-md">
+          <input type="text" id="bizSubtitle" value="Industrial & Domestic Electrical Works, Wiring & Maintenance Solutions" class="bg-transparent text-xs text-slate-400 mt-1 outline-none border-b border-transparent hover:border-slate-600 focus:border-amber-500 w-full max-w-md">
           <div class="flex flex-wrap gap-4 text-xs text-slate-400 mt-2">
             <span>Contact: <input type="text" id="bizPhone" value="+91 9876543210" class="bg-transparent text-slate-300 outline-none w-32 border-b border-transparent hover:border-slate-600"></span>
             <span>GSTIN: <input type="text" id="bizGst" value="27AAAAA0000A1Z5" class="bg-transparent text-slate-300 outline-none w-36 border-b border-transparent hover:border-slate-600"></span>
@@ -68,6 +80,9 @@
         <!-- Document Metas & Search -->
         <div class="space-y-2 w-full md:w-auto">
           <div class="flex justify-end gap-2 mb-1">
+            <a href="https://amartomar700.github.io/kalyani-billing/" target="_blank" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-200 px-2 py-0.5 rounded border border-slate-700 flex items-center gap-1">
+              ↗ Open Full Screen
+            </a>
             <button onclick="logout()" class="text-[11px] bg-slate-800 hover:bg-rose-900 text-rose-300 px-2 py-0.5 rounded border border-slate-700">Logout</button>
           </div>
           <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 space-y-2 text-xs">
@@ -107,7 +122,7 @@
           <label class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
             📌 Project / Service Subject:
           </label>
-          <select id="docSubject" onchange="loadDynamicTerms()" class="border border-slate-300 rounded px-3 py-1.5 text-xs font-semibold bg-white text-blue-700 outline-none w-full sm:w-64 focus:border-blue-600">
+          <select id="docSubject" onchange="loadDynamicTerms()" class="border border-slate-300 rounded px-3 py-1.5 text-xs font-semibold bg-white text-amber-700 outline-none w-full sm:w-64 focus:border-amber-600">
             <option value="Electrical">Electrical Installation & Repair</option>
             <option value="CCTV">CCTV Security Surveillance</option>
             <option value="Networking">LAN & Optical Fiber Networking</option>
@@ -120,13 +135,13 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
           <div>
             <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Customer / Client Details</label>
-            <input type="text" id="custName" placeholder="Client / Owner Name *" class="w-full border border-slate-300 rounded px-3 py-1.5 text-sm bg-white mb-2 outline-none focus:border-blue-600">
-            <textarea id="custAddress" rows="2" placeholder="Site / Flat / Delivery Address" class="w-full border border-slate-300 rounded px-3 py-1.5 text-xs bg-white outline-none focus:border-blue-600"></textarea>
+            <input type="text" id="custName" placeholder="Client / Owner Name *" class="w-full border border-slate-300 rounded px-3 py-1.5 text-sm bg-white mb-2 outline-none focus:border-amber-600">
+            <textarea id="custAddress" rows="2" placeholder="Site / Flat / Delivery Address" class="w-full border border-slate-300 rounded px-3 py-1.5 text-xs bg-white outline-none focus:border-amber-600"></textarea>
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Contact Details</label>
-            <input type="text" id="custPhone" placeholder="Mobile Number" class="w-full border border-slate-300 rounded px-3 py-1.5 text-sm bg-white mb-2 outline-none focus:border-blue-600">
-            <input type="text" id="custGst" placeholder="Client GSTIN (Optional)" class="w-full border border-slate-300 rounded px-3 py-1.5 text-xs bg-white outline-none focus:border-blue-600">
+            <input type="text" id="custPhone" placeholder="Mobile Number" class="w-full border border-slate-300 rounded px-3 py-1.5 text-sm bg-white mb-2 outline-none focus:border-amber-600">
+            <input type="text" id="custGst" placeholder="Client GSTIN (Optional)" class="w-full border border-slate-300 rounded px-3 py-1.5 text-xs bg-white outline-none focus:border-amber-600">
           </div>
         </div>
       </div>
@@ -148,7 +163,7 @@
             <tr class="item-row">
               <td class="p-2 text-center text-slate-400 border-r border-slate-200 row-num">1</td>
               <td class="p-2 border-r border-slate-200">
-                <input type="text" class="w-full px-2 py-1 outline-none text-sm item-desc focus:bg-blue-50/50 rounded" placeholder="Item name or service description">
+                <input type="text" class="w-full px-2 py-1 outline-none text-sm item-desc focus:bg-amber-50/50 rounded" placeholder="Item name or service description">
               </td>
               <td class="p-2 border-r border-slate-200">
                 <input type="number" min="1" value="1" class="w-full text-center px-2 py-1 border border-slate-300 rounded outline-none text-sm item-qty" oninput="calculateGrandTotal()">
@@ -167,7 +182,7 @@
 
       <!-- Add Row Buttons -->
       <div class="flex justify-between items-center no-print">
-        <button type="button" onclick="addItemRow()" class="bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs font-semibold px-4 py-2 rounded shadow-sm transition">
+        <button type="button" onclick="addItemRow()" class="bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 text-xs font-semibold px-4 py-2 rounded shadow-sm transition">
           + Add New Item
         </button>
       </div>
@@ -176,7 +191,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-slate-200 pt-5">
         <div>
           <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Scope of Work & Terms (Auto-Loaded)</label>
-          <textarea id="termsConditions" rows="8" class="w-full border border-slate-300 rounded p-2 text-xs text-slate-700 bg-white outline-none leading-relaxed focus:border-blue-600"></textarea>
+          <textarea id="termsConditions" rows="8" class="w-full border border-slate-300 rounded p-2 text-xs text-slate-700 bg-white outline-none leading-relaxed focus:border-amber-600"></textarea>
         </div>
 
         <div id="pricingSummaryBox" class="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-3 text-sm h-fit">
@@ -188,11 +203,11 @@
           <div class="border-t border-slate-200 pt-2 space-y-2" id="gstControlsSection">
             <div class="flex items-center justify-between">
               <label class="inline-flex items-center text-xs font-semibold text-slate-700 cursor-pointer">
-                <input type="checkbox" id="gstCheck" onchange="calculateGrandTotal()" class="mr-2 rounded text-blue-600">
+                <input type="checkbox" id="gstCheck" onchange="calculateGrandTotal()" class="mr-2 rounded text-amber-600">
                 Apply GST (18%)
               </label>
             </div>
-            <div id="gstSplitRows" class="hidden space-y-1 text-xs text-slate-500 pl-4 border-l-2 border-blue-200">
+            <div id="gstSplitRows" class="hidden space-y-1 text-xs text-slate-500 pl-4 border-l-2 border-amber-300">
               <div class="flex justify-between">
                 <span>Central GST (9%):</span>
                 <span id="valCgst">₹0.00</span>
@@ -206,7 +221,7 @@
 
           <div class="border-t-2 border-slate-300 pt-3 flex justify-between items-center text-base font-bold text-slate-900">
             <span>Final Amount:</span>
-            <span class="text-blue-700 text-xl font-extrabold" id="valGrandTotal">₹0.00</span>
+            <span class="text-amber-700 text-xl font-extrabold" id="valGrandTotal">₹0.00</span>
           </div>
         </div>
       </div>
@@ -220,8 +235,8 @@
           <button type="button" id="saveSheetBtn" onclick="saveToGoogleSheet()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow transition text-sm flex items-center gap-1.5">
             💾 Save to Sheet
           </button>
-          <button type="button" onclick="triggerCleanPrint()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow transition text-sm flex items-center gap-2">
-            🖨️ Print / Save Document
+          <button type="button" onclick="prepareAndPrint()" class="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow transition text-sm flex items-center gap-2">
+            🖨️ Print / Save PDF
           </button>
         </div>
       </div>
@@ -229,27 +244,20 @@
     </div>
   </div>
 
-  <!-- ================= SEARCH OLD BILLS MODAL ================= -->
-  <div id="historyModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-6 space-y-4 max-h-[85vh] flex flex-col">
-      <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="text-lg font-bold text-slate-800">Saved Records from Cloud</h3>
-        <button onclick="closeHistoryModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
-      </div>
-
-      <input type="text" id="searchFilter" oninput="filterHistory()" placeholder="Search by Doc No, Subject or Client Name..." class="w-full border border-slate-300 rounded px-3 py-2 text-sm outline-none focus:border-blue-600">
-
-      <div class="overflow-y-auto flex-1 divide-y divide-slate-100" id="historyList">
-        <div class="text-center py-6 text-sm text-slate-400">Loading records from Google Sheets...</div>
+  <!-- ================= INLINE PRINT DOCUMENT (NO URL DEPENDENCY) ================= -->
+  <div id="printDocument" class="hidden bg-white max-w-4xl mx-auto p-6 border border-slate-300 font-sans">
+    
+    <div class="no-print mb-4 flex justify-between items-center bg-amber-50 p-3 rounded border border-amber-200">
+      <span class="text-xs font-semibold text-amber-800">Review bill below before printing:</span>
+      <div class="flex gap-2">
+        <button onclick="window.print()" class="bg-amber-600 text-white px-4 py-1.5 rounded text-xs font-bold">Print Now</button>
+        <button onclick="exitPrintPreview()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-1.5 rounded text-xs font-semibold">Back to Edit</button>
       </div>
     </div>
-  </div>
 
-  <!-- ================= STANDALONE PRINT INVOICE ================= -->
-  <div id="printDocument" class="hidden bg-white max-w-4xl mx-auto p-8 border border-slate-300 font-sans">
-    <div class="flex justify-between items-start border-b-2 border-blue-600 pb-4 mb-4">
+    <div class="flex justify-between items-start border-b-2 border-amber-600 pb-4 mb-4">
       <div>
-        <h1 class="text-2xl font-black text-blue-800 tracking-tight" id="pBizTitle"></h1>
+        <h1 class="text-2xl font-black text-amber-800 tracking-tight" id="pBizTitle">KALYANI ELECTRICALS</h1>
         <p class="text-xs text-slate-600" id="pBizSubtitle"></p>
         <div class="text-xs text-slate-500 mt-1">
           <span id="pBizPhone"></span> | GSTIN: <span id="pBizGst"></span>
@@ -260,7 +268,7 @@
         <div class="text-xs text-slate-600 mt-1">
           <div><strong>Doc No:</strong> <span id="pBillNo"></span></div>
           <div><strong>Date:</strong> <span id="pBillDate"></span></div>
-          <div class="mt-1 text-blue-700 font-semibold">Subject: <span id="pDocSubject"></span></div>
+          <div class="mt-1 text-amber-700 font-semibold">Subject: <span id="pDocSubject"></span></div>
         </div>
       </div>
     </div>
@@ -305,7 +313,7 @@
             <span id="pSgst"></span>
           </div>
         </div>
-        <div class="border-t-2 border-blue-600 pt-2 flex justify-between font-bold text-sm text-blue-900">
+        <div class="border-t-2 border-amber-600 pt-2 flex justify-between font-bold text-sm text-amber-900">
           <span>Grand Total:</span>
           <span class="text-base" id="pGrandTotal"></span>
         </div>
@@ -318,6 +326,18 @@
         <div class="h-10"></div>
         <div class="font-semibold text-slate-700">Authorized Signatory</div>
       </div>
+    </div>
+  </div>
+
+  <!-- Search Modal -->
+  <div id="historyModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-6 space-y-4 max-h-[85vh] flex flex-col">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-lg font-bold text-slate-800">Saved Records from Cloud</h3>
+        <button onclick="closeHistoryModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+      </div>
+      <input type="text" id="searchFilter" oninput="filterHistory()" placeholder="Search by Doc No or Client Name..." class="w-full border border-slate-300 rounded px-3 py-2 text-sm outline-none">
+      <div class="overflow-y-auto flex-1 divide-y divide-slate-100" id="historyList"></div>
     </div>
   </div>
 
@@ -366,7 +386,7 @@
     };
 
     function verifyAuth() {
-      if (sessionStorage.getItem('is_auth_billing') === 'true') {
+      if (sessionStorage.getItem('is_auth_kalyani') === 'true') {
         document.getElementById('loginOverlay').classList.add('hidden');
         document.getElementById('mainBillingApp').classList.remove('hidden');
       }
@@ -376,7 +396,7 @@
       const u = document.getElementById('loginUser').value.trim();
       const p = document.getElementById('loginPass').value.trim();
       if (u === AUTH_USER && p === AUTH_PASS) {
-        sessionStorage.setItem('is_auth_billing', 'true');
+        sessionStorage.setItem('is_auth_kalyani', 'true');
         document.getElementById('loginOverlay').classList.add('hidden');
         document.getElementById('mainBillingApp').classList.remove('hidden');
       } else {
@@ -385,7 +405,7 @@
     }
 
     function logout() {
-      sessionStorage.removeItem('is_auth_billing');
+      sessionStorage.removeItem('is_auth_kalyani');
       location.reload();
     }
 
@@ -446,7 +466,7 @@
       tr.innerHTML = `
         <td class="p-2 text-center text-slate-400 border-r border-slate-200 row-num">${count}</td>
         <td class="p-2 border-r border-slate-200">
-          <input type="text" value="${desc}" class="w-full px-2 py-1 outline-none text-sm item-desc focus:bg-blue-50/50 rounded" placeholder="Item / Material description">
+          <input type="text" value="${desc}" class="w-full px-2 py-1 outline-none text-sm item-desc focus:bg-amber-50/50 rounded" placeholder="Item / Material description">
         </td>
         <td class="p-2 border-r border-slate-200">
           <input type="number" min="1" value="${qty}" class="w-full text-center px-2 py-1 border border-slate-300 rounded outline-none text-sm item-qty" oninput="calculateGrandTotal()">
@@ -503,6 +523,106 @@
       document.getElementById('valGrandTotal').textContent = '₹' + (subTotal + gstTotal).toFixed(2);
     }
 
+    // DIRECT IN-PAGE PRINT ENGINE (ZERO BLANK ISSUE)
+    function prepareAndPrint() {
+      const clientName = document.getElementById('custName').value.trim();
+      const docTypeSelect = document.getElementById('docType');
+      const isMat = docTypeSelect.value === 'MATERIAL_LIST';
+
+      // Populate Print Layout
+      document.getElementById('pBizTitle').textContent = document.getElementById('bizTitle').value;
+      document.getElementById('pBizSubtitle').textContent = document.getElementById('bizSubtitle').value;
+      document.getElementById('pBizPhone').textContent = document.getElementById('bizPhone').value;
+      document.getElementById('pBizGst').textContent = document.getElementById('bizGst').value;
+      document.getElementById('pDocType').textContent = docTypeSelect.options[docTypeSelect.selectedIndex].text;
+      document.getElementById('pBillNo').textContent = document.getElementById('billNo').value;
+      document.getElementById('pBillDate').textContent = document.getElementById('billDate').value;
+      document.getElementById('pDocSubject').textContent = document.getElementById('docSubject').value;
+      document.getElementById('pCustName').textContent = clientName || 'Valued Client';
+      document.getElementById('pCustAddress').textContent = document.getElementById('custAddress').value;
+      document.getElementById('pCustPhone').textContent = document.getElementById('custPhone').value || '-';
+      document.getElementById('pTerms').textContent = document.getElementById('termsConditions').value;
+
+      const pHead = document.getElementById('pTableHead');
+      const pSummary = document.getElementById('pSummarySection');
+
+      if (isMat) {
+        pHead.innerHTML = `
+          <th class="p-2 border border-slate-300 w-12 text-center">#</th>
+          <th class="p-2 border border-slate-300">Required Material Description</th>
+          <th class="p-2 border border-slate-300 w-24 text-center">Quantity</th>
+        `;
+        pSummary.style.display = 'none';
+      } else {
+        pHead.innerHTML = `
+          <th class="p-2 border border-slate-300 w-10 text-center">#</th>
+          <th class="p-2 border border-slate-300">Description of Work / Items</th>
+          <th class="p-2 border border-slate-300 w-16 text-center">Qty</th>
+          <th class="p-2 border border-slate-300 w-24 text-right">Rate (₹)</th>
+          <th class="p-2 border border-slate-300 w-28 text-right">Total (₹)</th>
+        `;
+        pSummary.style.display = 'block';
+        document.getElementById('pSubTotal').textContent = document.getElementById('valSubTotal').textContent;
+        document.getElementById('pGrandTotal').textContent = document.getElementById('valGrandTotal').textContent;
+
+        if (document.getElementById('gstCheck').checked) {
+          document.getElementById('pCgst').textContent = document.getElementById('valCgst').textContent;
+          document.getElementById('pSgst').textContent = document.getElementById('valSgst').textContent;
+          document.getElementById('pGstBlock').style.display = 'block';
+        } else {
+          document.getElementById('pGstBlock').style.display = 'none';
+        }
+      }
+
+      // Populate Items
+      const tbody = document.getElementById('pItemsBody');
+      tbody.innerHTML = '';
+      let rowIdx = 1;
+      document.querySelectorAll('#itemsContainer .item-row').forEach(row => {
+        const desc = row.querySelector('.item-desc').value.trim();
+        const qty = row.querySelector('.item-qty').value;
+        const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
+        const total = row.querySelector('.item-amount').textContent;
+
+        if (desc !== "" || rate > 0) {
+          const tr = document.createElement('tr');
+          tr.className = 'border-b border-slate-300';
+          if (isMat) {
+            tr.innerHTML = `
+              <td class="p-2 border border-slate-300 text-center text-slate-500">${rowIdx++}</td>
+              <td class="p-2 border border-slate-300 font-medium text-slate-800">${desc}</td>
+              <td class="p-2 border border-slate-300 text-center font-bold text-slate-900">${qty}</td>
+            `;
+          } else {
+            tr.innerHTML = `
+              <td class="p-2 border border-slate-300 text-center text-slate-500">${rowIdx++}</td>
+              <td class="p-2 border border-slate-300 font-medium text-slate-800">${desc}</td>
+              <td class="p-2 border border-slate-300 text-center">${qty}</td>
+              <td class="p-2 border border-slate-300 text-right">₹${rate.toFixed(2)}</td>
+              <td class="p-2 border border-slate-300 text-right font-bold text-slate-900">₹${total}</td>
+            `;
+          }
+          tbody.appendChild(tr);
+        }
+      });
+
+      // Switch view inline
+      document.getElementById('mainBillingApp').classList.add('hidden');
+      const pDoc = document.getElementById('printDocument');
+      pDoc.classList.remove('hidden');
+
+      // Trigger print dialogue
+      setTimeout(() => {
+        window.print();
+      }, 300);
+    }
+
+    function exitPrintPreview() {
+      document.getElementById('printDocument').classList.add('hidden');
+      document.getElementById('mainBillingApp').classList.remove('hidden');
+    }
+
+    // Google Sheets Cloud Sync
     async function saveToGoogleSheet() {
       const saveBtn = document.getElementById('saveSheetBtn');
       saveBtn.innerText = "Saving to Cloud...";
@@ -583,12 +703,12 @@
         item.innerHTML = `
           <div>
             <span class="text-xs bg-slate-200 text-slate-800 font-bold px-1.5 py-0.5 rounded">${b.billNo}</span>
-            <strong class="text-sm text-blue-700 ml-1">${b.custName}</strong>
+            <strong class="text-sm text-amber-700 ml-1">${b.custName}</strong>
             <div class="text-xs text-slate-400">${b.billDate} | Subject: ${b.subject || 'Electrical'}</div>
           </div>
           <div class="text-right">
             <span class="text-sm font-bold text-slate-800">${b.grandTotal}</span>
-            <button onclick="loadBillData('${b.billNo}')" class="block text-xs text-blue-600 hover:underline mt-1 font-semibold">Load to Form</button>
+            <button onclick="loadBillData('${b.billNo}')" class="block text-xs text-amber-600 hover:underline mt-1 font-semibold">Load to Form</button>
           </div>
         `;
         list.appendChild(item);
@@ -599,8 +719,7 @@
       const q = document.getElementById('searchFilter').value.toLowerCase();
       const filtered = fetchedBills.filter(b => 
         (b.billNo && b.billNo.toLowerCase().includes(q)) || 
-        (b.custName && b.custName.toLowerCase().includes(q)) ||
-        (b.subject && b.subject.toLowerCase().includes(q))
+        (b.custName && b.custName.toLowerCase().includes(q))
       );
       renderHistoryList(filtered);
     }
@@ -629,52 +748,6 @@
       closeHistoryModal();
     }
 
-    // BULLETPROOF PRINT SYSTEM (Safe URL + Storage Backup)
-    function triggerCleanPrint() {
-      const items = [];
-      document.querySelectorAll('#itemsContainer .item-row').forEach(row => {
-        const desc = row.querySelector('.item-desc').value.trim();
-        const qty = row.querySelector('.item-qty').value;
-        const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
-        const total = row.querySelector('.item-amount').textContent;
-        if (desc !== "" || rate > 0) {
-          items.push({ desc: desc || "Item", qty: qty, rate: rate.toFixed(2), total: total });
-        }
-      });
-
-      const docTypeSelect = document.getElementById('docType');
-      const docTypeDisplay = docTypeSelect.options[docTypeSelect.selectedIndex].text;
-      const isMat = docTypeSelect.value === 'MATERIAL_LIST';
-
-      const payload = {
-        bizTitle: document.getElementById('bizTitle').value,
-        bizSubtitle: document.getElementById('bizSubtitle').value,
-        bizPhone: document.getElementById('bizPhone').value,
-        bizGst: document.getElementById('bizGst').value,
-        docType: docTypeDisplay,
-        isMat: isMat,
-        billNo: document.getElementById('billNo').value,
-        billDate: document.getElementById('billDate').value,
-        subject: document.getElementById('docSubject').value,
-        custName: document.getElementById('custName').value || 'Valued Client',
-        custAddress: document.getElementById('custAddress').value || '',
-        custPhone: document.getElementById('custPhone').value || '-',
-        subTotal: document.getElementById('valSubTotal').textContent,
-        isGst: document.getElementById('gstCheck').checked,
-        cgst: document.getElementById('valCgst').textContent,
-        sgst: document.getElementById('valSgst').textContent,
-        grandTotal: document.getElementById('valGrandTotal').textContent,
-        items: items
-      };
-
-      // Save complete payload to localStorage
-      localStorage.setItem('kalyani_print_cache', JSON.stringify(payload));
-
-      // Also send clean compact data via URL without long terms text
-      const cleanUrlData = encodeURIComponent(JSON.stringify(payload));
-      window.open(window.location.origin + window.location.pathname + '?render=' + cleanUrlData, '_blank');
-    }
-
     function resetForm() {
       if (confirm("Reset current form?")) {
         document.getElementById('custName').value = '';
@@ -691,95 +764,6 @@
       document.getElementById('billDate').valueAsDate = new Date();
       handleDocTypeChange();
       loadDynamicTerms();
-
-      const params = new URLSearchParams(window.location.search);
-      const renderPayload = params.get('render');
-
-      if (renderPayload) {
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('mainBillingApp').style.display = 'none';
-        const pDoc = document.getElementById('printDocument');
-        pDoc.classList.remove('hidden');
-
-        let data = null;
-        try {
-          data = JSON.parse(decodeURIComponent(renderPayload));
-        } catch(e) {
-          data = JSON.parse(localStorage.getItem('kalyani_print_cache') || '{}');
-        }
-
-        if (data && data.billNo) {
-          document.getElementById('pBizTitle').textContent = data.bizTitle || 'KALYANI ELECTRICALS';
-          document.getElementById('pBizSubtitle').textContent = data.bizSubtitle || '';
-          document.getElementById('pBizPhone').textContent = data.bizPhone || '';
-          document.getElementById('pBizGst').textContent = data.bizGst || '';
-          document.getElementById('pDocType').textContent = data.docType || 'ESTIMATE';
-          document.getElementById('pBillNo').textContent = data.billNo || '-';
-          document.getElementById('pBillDate').textContent = data.billDate || '-';
-          document.getElementById('pDocSubject').textContent = data.subject || 'Electrical';
-          document.getElementById('pCustName').textContent = data.custName || '-';
-          document.getElementById('pCustAddress').textContent = data.custAddress || '';
-          document.getElementById('pCustPhone').textContent = data.custPhone || '-';
-
-          // Load auto-terms directly by subject
-          document.getElementById('pTerms').textContent = TERMS_LIBRARY[data.subject] || TERMS_LIBRARY.Electrical;
-
-          const pHead = document.getElementById('pTableHead');
-          const pSummary = document.getElementById('pSummarySection');
-
-          if (data.isMat) {
-            pHead.innerHTML = `
-              <th class="p-2 border border-slate-300 w-12 text-center">#</th>
-              <th class="p-2 border border-slate-300">Required Material Description</th>
-              <th class="p-2 border border-slate-300 w-24 text-center">Quantity</th>
-            `;
-            pSummary.style.display = 'none';
-          } else {
-            pHead.innerHTML = `
-              <th class="p-2 border border-slate-300 w-10 text-center">#</th>
-              <th class="p-2 border border-slate-300">Description of Work / Items</th>
-              <th class="p-2 border border-slate-300 w-16 text-center">Qty</th>
-              <th class="p-2 border border-slate-300 w-24 text-right">Rate (₹)</th>
-              <th class="p-2 border border-slate-300 w-28 text-right">Total (₹)</th>
-            `;
-            pSummary.style.display = 'block';
-            document.getElementById('pSubTotal').textContent = data.subTotal || '₹0.00';
-            document.getElementById('pGrandTotal').textContent = data.grandTotal || '₹0.00';
-
-            if (data.isGst) {
-              document.getElementById('pCgst').textContent = data.cgst || '₹0.00';
-              document.getElementById('pSgst').textContent = data.sgst || '₹0.00';
-            } else {
-              document.getElementById('pGstBlock').style.display = 'none';
-            }
-          }
-
-          const tbody = document.getElementById('pItemsBody');
-          tbody.innerHTML = '';
-          (data.items || []).forEach((it, idx) => {
-            const row = document.createElement('tr');
-            row.className = 'border-b border-slate-300';
-            if (data.isMat) {
-              row.innerHTML = `
-                <td class="p-2 border border-slate-300 text-center text-slate-500">${idx + 1}</td>
-                <td class="p-2 border border-slate-300 font-medium text-slate-800">${it.desc}</td>
-                <td class="p-2 border border-slate-300 text-center font-bold text-slate-900">${it.qty}</td>
-              `;
-            } else {
-              row.innerHTML = `
-                <td class="p-2 border border-slate-300 text-center text-slate-500">${idx + 1}</td>
-                <td class="p-2 border border-slate-300 font-medium text-slate-800">${it.desc}</td>
-                <td class="p-2 border border-slate-300 text-center">${it.qty}</td>
-                <td class="p-2 border border-slate-300 text-right">₹${it.rate}</td>
-                <td class="p-2 border border-slate-300 text-right font-bold text-slate-900">₹${it.total}</td>
-              `;
-            }
-            tbody.appendChild(row);
-          });
-
-          setTimeout(() => { window.print(); }, 350);
-        }
-      }
     });
   </script>
 </body>
